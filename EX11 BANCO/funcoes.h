@@ -1,6 +1,7 @@
-#ifndef FUNCOES_H_INCLUDED
-#define FUNCOES_H_INCLUDED
+void cadastroCliente();
 
+void cadastroCliente()
+{
 
+}
 
-#endif // FUNCOES_H_INCLUDED
