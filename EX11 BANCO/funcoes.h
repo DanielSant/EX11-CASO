@@ -1,3 +1,5 @@
+#ifndef FUNCOES_H_INCLUDED
+#define FUNCOES_H_INCLUDED
 
 //Libraries and namespaces
 #include <iostream>
@@ -12,17 +14,6 @@ using namespace std;
 bool login(char password[], char *arquivo);
 char menu(void);
 //=======================================
-
-//Structs----------------------------------
-typedef struct
-{
-    int numberCont;//Número id da conta
-    char name[21];//Nome Completo
-    double sale;//Saldo bancário
-    char password[10];//Requisitada para logar
-    bool avail;//Apagar conta lógicamente
-}stclient;
-//=========================================
 
 //Functions--------------------------------
 bool login(char password[], char *arquivo)
@@ -54,3 +45,5 @@ char menu(void)
     cin >> choice;
     return choice;
 }
+
+#endif // FUNCOES_H_INCLUDED

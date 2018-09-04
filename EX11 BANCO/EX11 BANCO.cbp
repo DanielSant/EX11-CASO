@@ -34,6 +34,7 @@
 		</Compiler>
 		<Unit filename="funcoes.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="structs.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
