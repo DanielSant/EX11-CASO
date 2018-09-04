@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1536094121 source:c:\users\daniel santos\documents\programas c.c++\ex11-caso\ex11 banco\main.cpp
+	"funcoes.h"
+
+1536091997 c:\users\daniel santos\documents\programas c.c++\ex11-caso\ex11 banco\funcoes.h
+	<iostream>
+	<locale.h>
+	<cstring>
+	<fstream>
+	<conio2.h>
+
