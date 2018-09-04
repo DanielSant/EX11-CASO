@@ -1,4 +1,5 @@
 # depslib dependency file v1.0
+<<<<<<< HEAD
 1536094121 source:c:\users\daniel santos\documents\programas c.c++\ex11-caso\ex11 banco\main.cpp
 	"funcoes.h"
 
@@ -8,4 +9,8 @@
 	<cstring>
 	<fstream>
 	<conio2.h>
+=======
+1535806700 source:c:\users\erick\dropbox\ufs\2018.1\programação ii\programas\ex11\ex11 banco\main.cpp
+	<iostream>
+>>>>>>> 81446fd1f7d8a9238b698ecf4dc68d5b4c4127f7
 

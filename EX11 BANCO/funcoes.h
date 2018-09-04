@@ -1,5 +1,3 @@
-#ifndef FUNCOES_H_INCLUDED
-#define FUNCOES_H_INCLUDED
 
 //Libraries and namespaces
 #include <iostream>
@@ -56,5 +54,3 @@ char menu(void)
     cin >> choice;
     return choice;
 }
-
-#endif // FUNCOES_H_INCLUDED
