@@ -17,8 +17,9 @@ int main()
         choice = menu();
         switch(choice)
         {
-            case '1'://Abrir conta
-                cout << "Abrir conta";
+            case '1':
+                cadastro();
+                //Abrir conta
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
             break;
@@ -36,7 +37,7 @@ int main()
             break;
 
             case '4'://Encerrar
-                cout << "Tchau";
+                cout << "Encerrando...";
             break;
 
             default:

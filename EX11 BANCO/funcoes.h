@@ -3,10 +3,15 @@
 
 //Libraries and namespaces
 #include <iostream>
-#include <locale.h>
-#include <cstring>
+#include <windows.h>
+#include <stdlib.h>
+#include <string.h>
+#include<sstream>
 #include <fstream>
 #include <conio2.h>
+#include<time.h>
+#include "structs.h"
+
 using namespace std;
 //========================
 
@@ -42,8 +47,36 @@ char menu(void)
         << "4 - Encerrar\n\n"
         << "  - Digite uma opção";
     gotoxy(1,6);
+    fflush(stdin);
     cin >> choice;
     return choice;
+}
+
+void cadastro()
+{
+    clrscr();
+    stclient cad;
+
+    fstream arq;
+
+    fflush(stdin);
+    cout << "Informe nome: ";
+    cin.getline(cad.name, 51);
+    cout << "Informe senha: ";
+    cin.getline(cad.password, 10);
+
+    arq.open("clientes.txt", ios::out | ios::app);
+    arq.write((const char*) (&cad), sizeof(stclient));
+    arq.close();
+
+    arq.open("clientes.txt", ios::in);
+    arq.read((char* ) (&cad), sizeof(stclient));
+    while(!arq.eof())
+    {
+        cout << "Nome: " << cad.name << endl;
+        cout << "senha: " << cad.password << endl;
+        arq.read((char *) (&cad), sizeof(stclient));
+    }
 }
 
 #endif // FUNCOES_H_INCLUDED
