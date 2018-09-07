@@ -16,12 +16,12 @@ using namespace std;
 //========================
 
 //Function prototypes--------------------
-bool login(char password[], char *arquivo);
+bool login(char senha[], char *arquivo);
 char menu(void);
 //=======================================
 
 //Functions--------------------------------
-bool login(char password[], char *arquivo)
+bool login(char senha[], char *arquivo)
 {
     ifstream fin;
     stclient client;
@@ -29,7 +29,7 @@ bool login(char password[], char *arquivo)
         fin.read((char *)(&client), sizeof(stclient));
             while(fin && !fin.eof())
             {
-                if(strcmp(password,client.password)==0)
+                if(strcmp(senha,client.senha)==0)
                     return true;
                 fin.read((char *)(&client), sizeof(stclient));
             }
@@ -61,9 +61,13 @@ void cadastro()
 
     fflush(stdin);
     cout << "Informe nome: ";
-    cin.getline(cad.name, 51);
+    cin.getline(cad.nome, 51);
+    cout << "Informe CPF: ";
+    cin.getline(cad.cpf, 12);
     cout << "Informe senha: ";
-    cin.getline(cad.password, 10);
+    cin.getline(cad.senha, 10);
+    cout << "Informe Saldo a depositar: ";
+    cin >> cad.saldo;
 
     arq.open("clientes.txt", ios::out | ios::app);
     arq.write((const char*) (&cad), sizeof(stclient));
@@ -73,10 +77,17 @@ void cadastro()
     arq.read((char* ) (&cad), sizeof(stclient));
     while(!arq.eof())
     {
-        cout << "Nome: " << cad.name << endl;
-        cout << "senha: " << cad.password << endl;
+        cout << "Nome: " << cad.nome << endl;
+        cout << "senha: " << cad.senha << endl;
+        cout << "CPF: " << cad.cpf << endl;
+        cout << "Saldo Disponível (R$): " << cad.saldo << endl;
         arq.read((char *) (&cad), sizeof(stclient));
     }
+}
+
+int saque()
+{
+
 }
 
 #endif // FUNCOES_H_INCLUDED
