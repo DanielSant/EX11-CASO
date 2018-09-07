@@ -18,6 +18,7 @@ using namespace std;
 //Function prototypes--------------------
 bool login(char senha[], char *arquivo);
 char menu(void);
+void cadastro(void);
 //=======================================
 
 //Functions--------------------------------
