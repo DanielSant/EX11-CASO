@@ -69,14 +69,17 @@ void cadastro()
     cout << "Informe Saldo a depositar: ";
     cin >> cad.saldo;
 
+    cad.avail = 1; // 1 - Para conta ativa | 0 - Para conta apagada
+
     arq.open("clientes.txt", ios::out | ios::app);
     arq.write((const char*) (&cad), sizeof(stclient));
     arq.close();
 
     arq.open("clientes.txt", ios::in);
     arq.read((char* ) (&cad), sizeof(stclient));
-    while(!arq.eof())
+    while(!arq.eof() && cad.avail == 1)
     {
+        cout << endl;
         cout << "Nome: " << cad.nome << endl;
         cout << "senha: " << cad.senha << endl;
         cout << "CPF: " << cad.cpf << endl;
