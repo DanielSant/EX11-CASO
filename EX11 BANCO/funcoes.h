@@ -3,20 +3,25 @@
 
 //Libraries and namespaces
 #include <iostream>
-#include <locale.h>
-#include <cstring>
+#include <windows.h>
+#include <stdlib.h>
+#include <string.h>
+#include<sstream>
 #include <fstream>
 #include <conio2.h>
+#include<time.h>
+#include "structs.h"
+
 using namespace std;
 //========================
 
 //Function prototypes--------------------
-bool login(char password[], char *arquivo);
+bool login(char senha[], char *arquivo);
 char menu(void);
 //=======================================
 
 //Functions--------------------------------
-bool login(char password[], char *arquivo)
+bool login(char senha[], char *arquivo)
 {
     ifstream fin;
     stclient client;
@@ -24,7 +29,7 @@ bool login(char password[], char *arquivo)
         fin.read((char *)(&client), sizeof(stclient));
             while(fin && !fin.eof())
             {
-                if(strcmp(password,client.password)==0)
+                if(strcmp(senha,client.senha)==0)
                     return true;
                 fin.read((char *)(&client), sizeof(stclient));
             }
@@ -42,8 +47,47 @@ char menu(void)
         << "4 - Encerrar\n\n"
         << "  - Digite uma opção";
     gotoxy(1,6);
+    fflush(stdin);
     cin >> choice;
     return choice;
+}
+
+void cadastro()
+{
+    clrscr();
+    stclient cad;
+
+    fstream arq;
+
+    fflush(stdin);
+    cout << "Informe nome: ";
+    cin.getline(cad.nome, 51);
+    cout << "Informe CPF: ";
+    cin.getline(cad.cpf, 12);
+    cout << "Informe senha: ";
+    cin.getline(cad.senha, 10);
+    cout << "Informe Saldo a depositar: ";
+    cin >> cad.saldo;
+
+    arq.open("clientes.txt", ios::out | ios::app);
+    arq.write((const char*) (&cad), sizeof(stclient));
+    arq.close();
+
+    arq.open("clientes.txt", ios::in);
+    arq.read((char* ) (&cad), sizeof(stclient));
+    while(!arq.eof())
+    {
+        cout << "Nome: " << cad.nome << endl;
+        cout << "senha: " << cad.senha << endl;
+        cout << "CPF: " << cad.cpf << endl;
+        cout << "Saldo Disponível (R$): " << cad.saldo << endl;
+        arq.read((char *) (&cad), sizeof(stclient));
+    }
+}
+
+int saque()
+{
+
 }
 
 #endif // FUNCOES_H_INCLUDED

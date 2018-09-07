@@ -4,9 +4,10 @@
 typedef struct
 {
     int numberCont;//Número id da conta
-    char name[21];//Nome Completo
-    double sale;//Saldo bancário
-    char password[10];//Requisitada para logar
+    char nome[51];//Nome Completo
+    char cpf[12]; // CPF do cliente
+    double saldo;//Saldo bancário
+    char senha[10];//Requisitada para logar
     bool avail;//Apagar conta lógicamente
 }stclient;
 
