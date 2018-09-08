@@ -113,6 +113,10 @@ int saque()
     {
         if( (strcmp(cpfVer, verificar.cpf) == 0) && (strcmp(senhaVer, verificar.senha) == 0) )
         {
+            cout << endl;
+            cout << "Nome: " << verificar.nome << endl;
+            cout << "CPF: " << verificar.cpf << endl;
+            cout << "Saldo Disponível (R$): " << verificar.saldo << endl;
             localizar = 1;
             break;
         }
@@ -122,18 +126,21 @@ int saque()
 
 
 
-
+    arqVer.open("clientes.txt", ios::out);
     if (localizar == 1)
     {
         cout << "Informe a quantia do saque: ";
         cin >> saqueVer;
         if (saqueVer <= verificar.saldo)
         {
-            arqVer.open("clientes.txt", ios::out);
-            cout << "Quantia disponível! Aguarde o saque.";
+
+            cout << "Quantia disponível! Aguarde o saque." << endl;
             verificar.saldo = verificar.saldo - saqueVer;
             arqVer.write((const char*) (&verificar), sizeof(stclient));
-            arqVer.close();
+
+
+            cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
+
         }else{
             cout << "Você não possui tal quantia disponível.";
         }
@@ -142,7 +149,10 @@ int saque()
     {
         cout << "Conta inválida/Não registrada!";
     }
+    arqVer.close();
 }
+
+
 void listaClientes()
 {
     clrscr();
