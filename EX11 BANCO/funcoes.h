@@ -44,8 +44,9 @@ char menu(void)
     cout<< "1 - Abrir conta\n"
         << "2 - Saque\n"
         << "3 - Depósito\n"
-        << "4 - Encerrar\n\n"
-        << "  - Digite uma opção";
+        << "4 - Encerrar\n"
+        << "5 - Lista Clientes\n"
+        << "  << Digite uma opção";
     gotoxy(1,6);
     fflush(stdin);
     cin >> choice;
@@ -120,7 +121,7 @@ int saque()
     arqVer.close();
 
 
-    arqVer.open("clientes.txt", ios::out);
+
 
     if (localizar == 1)
     {
@@ -128,6 +129,7 @@ int saque()
         cin >> saqueVer;
         if (saqueVer <= verificar.saldo)
         {
+            arqVer.open("clientes.txt", ios::out);
             cout << "Quantia disponível! Aguarde o saque.";
             verificar.saldo = verificar.saldo - saqueVer;
             arqVer.write((const char*) (&verificar), sizeof(stclient));
@@ -141,5 +143,24 @@ int saque()
         cout << "Conta inválida/Não registrada!";
     }
 }
+void listaClientes()
+{
+    clrscr();
+    stclient cad;
 
+    fstream arq;
+
+    arq.open("clientes.txt", ios::in);
+    arq.read((char* ) (&cad), sizeof(stclient));
+    while(!arq.eof() && cad.avail == 1)
+    {
+        cout << endl;
+        cout << "Nome: " << cad.nome << endl;
+        cout << "senha: " << cad.senha << endl;
+        cout << "CPF: " << cad.cpf << endl;
+        cout << "Saldo Disponível (R$): " << cad.saldo << endl;
+        arq.read((char *) (&cad), sizeof(stclient));
+    }
+    arq.close();
+}
 #endif // FUNCOES_H_INCLUDED

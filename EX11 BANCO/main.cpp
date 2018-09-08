@@ -40,6 +40,12 @@ int main()
                 cout << "Encerrando...";
             break;
 
+            case '5':
+                listaClientes();
+                cout << "\n\nOutra vez? (s/n)";
+                cin >> ans;
+                break;
+
             default:
                 cout << "Erro de escolha";
         }
