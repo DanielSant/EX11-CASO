@@ -38,18 +38,22 @@ int main()
 
             case '4'://Encerrar
                 abasteceNotas();
-
+                cout << "\n\nOutra vez? (s/n)";
+                cin >> ans;
             break;
 
             case '5':
                 listaClientes();
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
-                break;
+            break;
+            case '6':
+                cout << "\nVlw :) :c :+\n";
+            break;
 
             default:
                 cout << "Erro de escolha";
         }
-    }while(choice != '4' && toupper(ans) == 'S');
+    }while(choice != '6' && toupper(ans) == 'S');
     return 0;
 }

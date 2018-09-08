@@ -22,6 +22,7 @@ void cadastro(void);
 void saque(void);
 void listaClientes(void);
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
+void abasteceNotas(void);
 //=======================================
 
 //Functions--------------------------------
@@ -49,8 +50,9 @@ char menu(void)
         << "3 - Depósito\n"
         << "4 - Abastecer Notas TESTE\n"
         << "5 - Lista Clientes\n"
+        << "6 - Encerrar\n"
         << "  << Digite uma opção";
-    gotoxy(1,6);
+    gotoxy(1,7);
     fflush(stdin);
     cin >> choice;
     return choice;
@@ -202,7 +204,7 @@ void deposito()
     clrscr();
     char cpfVer[12], senhaVer[10];
     int localizar = 0, cont = 0;
-    int depositar, saqueVerAlt;
+    int depositar;
 
     fstream arqVer;
     stclient verificar;
@@ -233,7 +235,6 @@ void deposito()
 
     if (localizar == 1)
     {
-        int numComp;
         cout << endl << "Informe a quantia de depósito: ";
         cin >> depositar;
 
@@ -254,32 +255,66 @@ void deposito()
 
 void abasteceNotas()
 {
-    totalNotas notas;
+    cedulas notas;
     fstream carga;
 
     int temp100 = 0;
+    int temp50;
+    int temp20;
+    int temp10;
+    int temp5;
+    int temp2;
+    /*notas.notas100 = 0;
+    notas.notas50 = 0;
+    notas.notas20 = 0;
+    notas.notas10 = 0;
+    notas.notas5 = 0;
+    notas.notas2 = 0;
+    notas.valorTotal = 0;*/
 
-    cout << "Informe quantas notas 100 foram colocadas: ";
+    cout << "Informe quantas notas de R$100 foram colocadas: ";
     cin >> temp100;
+    cout << "Informe quantas notas R$50 foram colocadas: ";
+    cin >> temp50;
+    cout << "Informe quantas notas R$20 foram colocadas: ";
+    cin >> temp20;
+    cout << "Informe quantas notas R$10 foram colocadas: ";
+    cin >> temp10;
+    cout << "Informe quantas notas R$5 foram colocadas: ";
+    cin >> temp5;
+    cout << "Informe quantas notas R$2 foram colocadas: ";
+    cin >> temp2;
 
-    carga.open("cedulas.txt", ios::in | ios::out);
+    carga.open("cedulas.txt", ios::in|ios::out);
+        carga.read((char *) (&notas), sizeof(cedulas));
+            notas.notas100 = notas.notas100 + temp100;
+            notas.notas50 = notas.notas50 + temp50;
+            notas.notas20 = notas.notas20 + temp20;
+            notas.notas10 = notas.notas10 + temp10;
+            notas.notas5 = notas.notas5 + temp5;
+            notas.notas2 = notas.notas2 + temp2;
+            notas.valorTotal = (notas.notas100*100)+(notas.notas50*50)+
+            (notas.notas20*20)+(notas.notas10*10)+(notas.notas5*5)+(notas.notas2*2);
 
-    notas.notas100 = notas.notas100 + temp100;
-
-    carga.write((const char*) (&notas), sizeof(totalNotas));
+        carga.seekg(0);
+        carga.write((const char*) (&notas), sizeof(cedulas));
     carga.close();
 
 //===========================================
 
     carga.open("cedulas.txt", ios::in);
-    carga.read((char*) (&notas), sizeof(totalNotas));
+    carga.read((char*) (&notas), sizeof(cedulas));
     while( carga && !carga.eof())
     {
         cout << "Notas de 100: " << notas.notas100;
-        carga.read((char*) (&notas), sizeof(totalNotas));
+        cout << "\nNotas de 50: " << notas.notas50;
+        cout << "\nNotas de 20: " << notas.notas20;
+        cout << "\nNotas de 10: " << notas.notas10;
+        cout << "\nNotas de 5: " << notas.notas5;
+        cout << "\nNotas de 2: " << notas.notas2;
+        cout << "\nTotal Caixa: " << notas.valorTotal;
+
+        carga.read((char*) (&notas), sizeof(cedulas));
     }
-
-
-
 }
 #endif // FUNCOES_H_INCLUDED
