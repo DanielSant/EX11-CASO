@@ -87,11 +87,60 @@ void cadastro()
         cout << "Saldo Disponível (R$): " << cad.saldo << endl;
         arq.read((char *) (&cad), sizeof(stclient));
     }
+    arq.close();
 }
 
 int saque()
 {
+    clrscr();
+    char cpfVer[12], senhaVer[10];
+    int localizar = 0;
+    double saqueVer;
 
+    fstream arqVer;
+    stclient verificar;
+
+    fflush(stdin);
+    cout << "Informe o CPF: ";
+    cin.getline(cpfVer, 12);
+    cout << "Informe a senha: ";
+    cin.getline(senhaVer, 10);
+
+    arqVer.open("clientes.txt", ios::in);
+    arqVer.read((char *) (&verificar), sizeof(stclient));
+
+    while(arqVer && !arqVer.eof())
+    {
+        if( (strcmp(cpfVer, verificar.cpf) == 0) && (strcmp(senhaVer, verificar.senha) == 0) )
+        {
+            localizar = 1;
+            break;
+        }
+        arqVer.read((char *) (&verificar), sizeof(stclient));
+    }
+    arqVer.close();
+
+
+    arqVer.open("clientes.txt", ios::out);
+
+    if (localizar == 1)
+    {
+        cout << "Informe a quantia do saque: ";
+        cin >> saqueVer;
+        if (saqueVer <= verificar.saldo)
+        {
+            cout << "Quantia disponível! Aguarde o saque.";
+            verificar.saldo = verificar.saldo - saqueVer;
+            arqVer.write((const char*) (&verificar), sizeof(stclient));
+            arqVer.close();
+        }else{
+            cout << "Você não possui tal quantia disponível.";
+        }
+    }
+    else
+    {
+        cout << "Conta inválida/Não registrada!";
+    }
 }
 
 #endif // FUNCOES_H_INCLUDED
