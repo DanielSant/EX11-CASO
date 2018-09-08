@@ -25,7 +25,7 @@ int main()
             break;
 
             case '2'://Saque
-                cout << "Saque";
+                saque();
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
             break;
