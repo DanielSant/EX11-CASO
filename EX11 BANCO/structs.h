@@ -11,4 +11,13 @@ typedef struct
     bool avail;//Apagar conta lógicamente
 }stclient;
 
+typedef struct
+{
+    int notas100=0;
+    int notas50=0;
+    int notas20=0;
+    int notas10=0;
+    int notas5=0;
+}totalNotas;
+
 #endif // STRUCTS_H_INCLUDED

@@ -47,7 +47,7 @@ char menu(void)
     cout<< "1 - Abrir conta\n"
         << "2 - Saque\n"
         << "3 - Depósito\n"
-        << "4 - Encerrar\n"
+        << "4 - Abastecer Notas TESTE\n"
         << "5 - Lista Clientes\n"
         << "  << Digite uma opção";
     gotoxy(1,6);
@@ -250,5 +250,36 @@ void deposito()
         cout << "Conta inválida/Não registrada!";
     }
     arqVer.close();
+}
+
+void abasteceNotas()
+{
+    totalNotas notas;
+    fstream carga;
+
+    int temp100 = 0;
+
+    cout << "Informe quantas notas 100 foram colocadas: ";
+    cin >> temp100;
+
+    carga.open("cedulas.txt", ios::in | ios::out);
+
+    notas.notas100 = notas.notas100 + temp100;
+
+    carga.write((const char*) (&notas), sizeof(totalNotas));
+    carga.close();
+
+//===========================================
+
+    carga.open("cedulas.txt", ios::in);
+    carga.read((char*) (&notas), sizeof(totalNotas));
+    while( carga && !carga.eof())
+    {
+        cout << "Notas de 100: " << notas.notas100;
+        carga.read((char*) (&notas), sizeof(totalNotas));
+    }
+
+
+
 }
 #endif // FUNCOES_H_INCLUDED

@@ -37,7 +37,8 @@ int main()
             break;
 
             case '4'://Encerrar
-                cout << "Encerrando...";
+                abasteceNotas();
+
             break;
 
             case '5':
