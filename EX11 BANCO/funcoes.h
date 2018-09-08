@@ -19,6 +19,8 @@ using namespace std;
 bool login(char senha[], char *arquivo);
 char menu(void);
 void cadastro(void);
+int saque(void);
+void listaClientes(void);
 //=======================================
 
 //Functions--------------------------------
@@ -95,7 +97,7 @@ int saque()
 {
     clrscr();
     char cpfVer[12], senhaVer[10];
-    int localizar = 0;
+    int localizar = 0, cont = 0;
     double saqueVer;
 
     fstream arqVer;
@@ -107,11 +109,12 @@ int saque()
     cout << "Informe a senha: ";
     cin.getline(senhaVer, 10);
 
-    arqVer.open("clientes.txt", ios::in);
+    arqVer.open("clientes.txt", ios::in|ios::out);
     arqVer.read((char *) (&verificar), sizeof(stclient));
 
     while(arqVer && !arqVer.eof())
     {
+        cont++;
         if( (strcmp(cpfVer, verificar.cpf) == 0) && (strcmp(senhaVer, verificar.senha) == 0) )
         {
             cout << endl;
@@ -123,11 +126,8 @@ int saque()
         }
         arqVer.read((char *) (&verificar), sizeof(stclient));
     }
-    arqVer.close();
 
-
-
-    arqVer.open("clientes.txt", ios::out);
+    //arqVer.open("clientes.txt", ios::out);
     if (localizar == 1)
     {
         cout << "Informe a quantia do saque: ";
@@ -137,6 +137,7 @@ int saque()
 
             cout << "Quantia disponível! Aguarde o saque." << endl;
             verificar.saldo = verificar.saldo - saqueVer;
+            arqVer.seekg((cont-1) * sizeof(stclient));
             arqVer.write((const char*) (&verificar), sizeof(stclient));
 
 
@@ -152,7 +153,6 @@ int saque()
     }
     arqVer.close();
 }
-
 
 void listaClientes()
 {
