@@ -147,7 +147,7 @@ void saque()
         calculaNotas(5,numComp,saqueVerAlt);
         cout << "RS5 = " << numComp << endl;
         calculaNotas(2,numComp,saqueVerAlt);
-        cout << "RS5 = " << numComp << endl;
+        cout << "RS2 = " << numComp << endl;
 
         if (saqueVer <= verificar.saldo)
         {
@@ -156,7 +156,6 @@ void saque()
             verificar.saldo = verificar.saldo - saqueVer;
             arqVer.seekg((cont-1) * sizeof(stclient));
             arqVer.write((const char*) (&verificar), sizeof(stclient));
-
 
             cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
 
@@ -198,4 +197,58 @@ void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
         quantiaRestante = quantiaRestante % valorDaNota;
 }
 
+void deposito()
+{
+    clrscr();
+    char cpfVer[12], senhaVer[10];
+    int localizar = 0, cont = 0;
+    int depositar, saqueVerAlt;
+
+    fstream arqVer;
+    stclient verificar;
+
+    fflush(stdin);
+    cout << "Informe o CPF: ";
+    cin.getline(cpfVer, 12);
+    cout << "Informe a senha: ";
+    cin.getline(senhaVer, 10);
+
+    arqVer.open("clientes.txt", ios::in|ios::out);
+    arqVer.read((char *) (&verificar), sizeof(stclient));
+
+    while(arqVer && !arqVer.eof())
+    {
+        cont++;
+        if( (strcmp(cpfVer, verificar.cpf) == 0) && (strcmp(senhaVer, verificar.senha) == 0) )
+        {
+            cout << endl;
+            cout << "Nome: " << verificar.nome << endl;
+            cout << "CPF: " << verificar.cpf << endl;
+            cout << "Saldo Disponível (R$): " << verificar.saldo << endl;
+            localizar = 1;
+            break;
+        }
+        arqVer.read((char *) (&verificar), sizeof(stclient));
+    }
+
+    if (localizar == 1)
+    {
+        int numComp;
+        cout << endl << "Informe a quantia de depósito: ";
+        cin >> depositar;
+
+            cout << "Depósito recebido! Saldo total cadastrado." << endl;
+            verificar.saldo = verificar.saldo + depositar;
+            arqVer.seekg((cont-1) * sizeof(stclient));
+            arqVer.write((const char*) (&verificar), sizeof(stclient));
+
+            cout << "Seu saldo total é de: " << verificar.saldo << " R$";
+
+    }
+    else
+    {
+        cout << "Conta inválida/Não registrada!";
+    }
+    arqVer.close();
+}
 #endif // FUNCOES_H_INCLUDED

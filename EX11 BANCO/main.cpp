@@ -31,7 +31,7 @@ int main()
             break;
 
             case '3'://Depósito
-                cout << "Depositar";
+                deposito();
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
             break;
