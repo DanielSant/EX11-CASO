@@ -3,13 +3,13 @@
 
 //Libraries and namespaces
 #include <iostream>
-#include <windows.h>
-#include <stdlib.h>
+//#include <windows.h>
+//#include <stdlib.h>
 #include <string.h>
-#include<sstream>
+//#include <sstream>
 #include <fstream>
 #include <conio2.h>
-#include<time.h>
+//#include <time.h>
 #include "structs.h"
 
 using namespace std;
@@ -19,8 +19,9 @@ using namespace std;
 bool login(char senha[], char *arquivo);
 char menu(void);
 void cadastro(void);
-int saque(void);
+void saque(void);
 void listaClientes(void);
+void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
 //=======================================
 
 //Functions--------------------------------
@@ -38,7 +39,6 @@ bool login(char senha[], char *arquivo)
             }
         fin.close();
         return false;
-
 }
 
 char menu(void)
@@ -93,12 +93,12 @@ void cadastro()
     arq.close();
 }
 
-int saque()
+void saque()
 {
     clrscr();
     char cpfVer[12], senhaVer[10];
     int localizar = 0, cont = 0;
-    double saqueVer;
+    int saqueVer, saqueVerAlt;
 
     fstream arqVer;
     stclient verificar;
@@ -130,8 +130,25 @@ int saque()
     //arqVer.open("clientes.txt", ios::out);
     if (localizar == 1)
     {
+        int numComp;
         cout << "Informe a quantia do saque: ";
         cin >> saqueVer;
+        saqueVerAlt = saqueVer;
+
+        cout << endl;
+        calculaNotas(100,numComp,saqueVerAlt);
+        cout << "RS100 = " << numComp << endl;
+        calculaNotas(50,numComp,saqueVerAlt);
+        cout << "RS50 = " << numComp << endl;
+        calculaNotas(20,numComp,saqueVerAlt);
+        cout << "RS20 = " << numComp << endl;
+        calculaNotas(10,numComp,saqueVerAlt);
+        cout << "RS10 = " << numComp << endl;
+        calculaNotas(5,numComp,saqueVerAlt);
+        cout << "RS5 = " << numComp << endl;
+        calculaNotas(2,numComp,saqueVerAlt);
+        cout << "RS5 = " << numComp << endl;
+
         if (saqueVer <= verificar.saldo)
         {
 
@@ -174,4 +191,11 @@ void listaClientes()
     }
     arq.close();
 }
+
+void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
+{
+        numNotas = quantiaRestante/valorDaNota;
+        quantiaRestante = quantiaRestante % valorDaNota;
+}
+
 #endif // FUNCOES_H_INCLUDED
