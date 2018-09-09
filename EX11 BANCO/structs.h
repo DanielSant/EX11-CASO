@@ -13,13 +13,13 @@ typedef struct
 
 typedef struct
 {
-    int notas100;
-    int notas50;
-    int notas20;
-    int notas10;
-    int notas5;
-    int notas2;
-    int valorTotal;
+    int notas100=0;
+    int notas50=0;
+    int notas20=0;
+    int notas10=0;
+    int notas5=0;
+    int notas2=0;
+    int valorTotal=0;
 }cedulas;
 
 #endif // STRUCTS_H_INCLUDED

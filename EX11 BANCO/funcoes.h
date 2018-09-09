@@ -103,7 +103,9 @@ void saque()
     int saqueVer, saqueVerAlt;
 
     fstream arqVer;
+    fstream saqueNotas;
     stclient verificar;
+    cedulas notas;
 
     fflush(stdin);
     cout << "Informe o CPF: ";
@@ -135,25 +137,43 @@ void saque()
         int numComp;
         cout << "Informe a quantia do saque: ";
         cin >> saqueVer;
+
         saqueVerAlt = saqueVer;
 
-        cout << endl;
-        calculaNotas(100,numComp,saqueVerAlt);
-        cout << "RS100 = " << numComp << endl;
-        calculaNotas(50,numComp,saqueVerAlt);
-        cout << "RS50 = " << numComp << endl;
-        calculaNotas(20,numComp,saqueVerAlt);
-        cout << "RS20 = " << numComp << endl;
-        calculaNotas(10,numComp,saqueVerAlt);
-        cout << "RS10 = " << numComp << endl;
-        calculaNotas(5,numComp,saqueVerAlt);
-        cout << "RS5 = " << numComp << endl;
-        calculaNotas(2,numComp,saqueVerAlt);
-        cout << "RS2 = " << numComp << endl;
+        //if (notas.valorTotal >= saqueVer)
+        //{
+            saqueNotas.open("cedulas.txt", ios::in | ios::out);
+            saqueNotas.read((char*) (&notas), sizeof(cedulas));
+            cout << endl;
+            calculaNotas(100,numComp,saqueVerAlt);
+            notas.notas100 -= numComp;
+            cout << "RS100 = " << numComp << endl;
+            calculaNotas(50,numComp,saqueVerAlt);
+            notas.notas50 -= numComp;
+            cout << "RS50 = " << numComp << endl;
+            calculaNotas(20,numComp,saqueVerAlt);
+            notas.notas20 -= numComp;
+            cout << "RS20 = " << numComp << endl;
+            calculaNotas(10,numComp,saqueVerAlt);
+            notas.notas10 -= numComp;
+            cout << "RS10 = " << numComp << endl;
+            calculaNotas(5,numComp,saqueVerAlt);
+            notas.notas5 -= numComp;
+            cout << "RS5 = " << numComp << endl;
+            calculaNotas(2,numComp,saqueVerAlt);
+            notas.notas2 -= numComp;
+            cout << "RS2 = " << numComp << endl;
+
+            saqueNotas.seekg(0);
+            saqueNotas.write((const char*) (&notas), sizeof(cedulas));
+            saqueNotas.close();
+
+        //}else{
+        //    cout<< "Não há notas suficientes no caixa eletrônico. Solicitar reabastecimento." << endl;
+        //}
 
         if (saqueVer <= verificar.saldo)
         {
-
             cout << "Quantia disponível! Aguarde o saque." << endl;
             verificar.saldo = verificar.saldo - saqueVer;
             arqVer.seekg((cont-1) * sizeof(stclient));
@@ -255,6 +275,7 @@ void deposito()
 
 void abasteceNotas()
 {
+    clrscr();
     cedulas notas;
     fstream carga;
 
@@ -272,6 +293,7 @@ void abasteceNotas()
     notas.notas2 = 0;
     notas.valorTotal = 0;*/
 
+    fflush(stdin);
     cout << "Informe quantas notas de R$100 foram colocadas: ";
     cin >> temp100;
     cout << "Informe quantas notas R$50 foram colocadas: ";
@@ -286,7 +308,7 @@ void abasteceNotas()
     cin >> temp2;
 
     carga.open("cedulas.txt", ios::in|ios::out);
-        carga.read((char *) (&notas), sizeof(cedulas));
+    carga.read((char *) (&notas), sizeof(cedulas));
             notas.notas100 = notas.notas100 + temp100;
             notas.notas50 = notas.notas50 + temp50;
             notas.notas20 = notas.notas20 + temp20;
@@ -298,7 +320,7 @@ void abasteceNotas()
 
         carga.seekg(0);
         carga.write((const char*) (&notas), sizeof(cedulas));
-    carga.close();
+        carga.close();
 
 //===========================================
 
@@ -306,13 +328,14 @@ void abasteceNotas()
     carga.read((char*) (&notas), sizeof(cedulas));
     while( carga && !carga.eof())
     {
+        cout << endl;
         cout << "Notas de 100: " << notas.notas100;
         cout << "\nNotas de 50: " << notas.notas50;
         cout << "\nNotas de 20: " << notas.notas20;
         cout << "\nNotas de 10: " << notas.notas10;
         cout << "\nNotas de 5: " << notas.notas5;
         cout << "\nNotas de 2: " << notas.notas2;
-        cout << "\nTotal Caixa: " << notas.valorTotal;
+        cout << "\nTotal Caixa: " << notas.valorTotal << "(R$)";
 
         carga.read((char*) (&notas), sizeof(cedulas));
     }
