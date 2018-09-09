@@ -22,6 +22,7 @@ void cadastro(void);
 void saque(void);
 void listaClientes(void);
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
+void deposito(void);
 void abasteceNotas(void);
 //=======================================
 
