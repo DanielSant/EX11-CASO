@@ -140,51 +140,57 @@ void saque()
         cin >> saqueVer;
 
         saqueVerAlt = saqueVer;
+        saqueNotas.open("cedulas.txt", ios::in);
+        saqueNotas.read((char*) (&notas), sizeof(cedulas));
 
-        //if (notas.valorTotal >= saqueVer)
-        //{
-            saqueNotas.open("cedulas.txt", ios::in | ios::out);
-            saqueNotas.read((char*) (&notas), sizeof(cedulas));
-            cout << endl;
-            calculaNotas(100,numComp,saqueVerAlt);
-            notas.notas100 -= numComp;
-            cout << "RS100 = " << numComp << endl;
-            calculaNotas(50,numComp,saqueVerAlt);
-            notas.notas50 -= numComp;
-            cout << "RS50 = " << numComp << endl;
-            calculaNotas(20,numComp,saqueVerAlt);
-            notas.notas20 -= numComp;
-            cout << "RS20 = " << numComp << endl;
-            calculaNotas(10,numComp,saqueVerAlt);
-            notas.notas10 -= numComp;
-            cout << "RS10 = " << numComp << endl;
-            calculaNotas(5,numComp,saqueVerAlt);
-            notas.notas5 -= numComp;
-            cout << "RS5 = " << numComp << endl;
-            calculaNotas(2,numComp,saqueVerAlt);
-            notas.notas2 -= numComp;
-            cout << "RS2 = " << numComp << endl;
-
-            saqueNotas.seekg(0);
-            saqueNotas.write((const char*) (&notas), sizeof(cedulas));
-            saqueNotas.close();
-
-        //}else{
-        //    cout<< "Não há notas suficientes no caixa eletrônico. Solicitar reabastecimento." << endl;
-        //}
-
-        if (saqueVer <= verificar.saldo)
+        if (notas.valorTotal >= saqueVer)
         {
-            cout << "Quantia disponível! Aguarde o saque." << endl;
-            verificar.saldo = verificar.saldo - saqueVer;
-            arqVer.seekg((cont-1) * sizeof(stclient));
-            arqVer.write((const char*) (&verificar), sizeof(stclient));
+            saqueNotas.close();
+                if (saqueVer <= verificar.saldo)
+            {
+                cout << "Quantia disponível! Aguarde o saque." << endl;
+                verificar.saldo = verificar.saldo - saqueVer;
+                arqVer.seekg((cont-1) * sizeof(stclient));
+                arqVer.write((const char*) (&verificar), sizeof(stclient));
 
-            cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
+                saqueNotas.open("cedulas.txt", ios::in | ios::out);
+                saqueNotas.read((char*) (&notas), sizeof(cedulas));
+                cout << endl;
+                calculaNotas(100,numComp,saqueVerAlt);
+                notas.notas100 -= numComp;
+                cout << "RS100 = " << numComp << endl;
+                calculaNotas(50,numComp,saqueVerAlt);
+                notas.notas50 -= numComp;
+                cout << "RS50 = " << numComp << endl;
+                calculaNotas(20,numComp,saqueVerAlt);
+                notas.notas20 -= numComp;
+                cout << "RS20 = " << numComp << endl;
+                calculaNotas(10,numComp,saqueVerAlt);
+                notas.notas10 -= numComp;
+                cout << "RS10 = " << numComp << endl;
+                calculaNotas(5,numComp,saqueVerAlt);
+                notas.notas5 -= numComp;
+                cout << "RS5 = " << numComp << endl;
+                calculaNotas(2,numComp,saqueVerAlt);
+                notas.notas2 -= numComp;
+                cout << "RS2 = " << numComp << endl;
+
+                saqueNotas.seekg(0);
+                saqueNotas.write((const char*) (&notas), sizeof(cedulas));
+                saqueNotas.close();
+
+
+                cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
+
+            }else{
+                cout << "Você não possui tal quantia disponível.";
+            }
+
 
         }else{
-            cout << "Você não possui tal quantia disponível.";
+            cout<< "Não há notas suficientes no caixa eletrônico. Solicitar reabastecimento." << endl;
         }
+
     }
     else
     {
