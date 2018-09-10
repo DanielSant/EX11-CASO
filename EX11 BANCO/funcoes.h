@@ -142,7 +142,7 @@ void saque()
         saqueNotas.open("cedulas.txt", ios::in);
         saqueNotas.read((char*) (&notas), sizeof(cedulas));
 
-        if (notas.valorTotal >= saqueVer)
+        if (notas.valorTotal > saqueVer)
         {
             saqueNotas.close();
                 if (saqueVer <= verificar.saldo)
@@ -154,24 +154,31 @@ void saque()
 
                 saqueNotas.open("cedulas.txt", ios::in | ios::out);
                 saqueNotas.read((char*) (&notas), sizeof(cedulas));
+
                 cout << endl;
+
                 calculaNotas(100,numComp,saqueVerAlt);
-                notas.notas100 -= numComp;
+                if (notas.notas100 > 0 && notas.notas100 >= numComp) { notas.notas100 -= numComp;}
                 cout << "RS100 = " << numComp << endl;
+
                 calculaNotas(50,numComp,saqueVerAlt);
-                notas.notas50 -= numComp;
+                if (notas.notas50 > 0 && notas.notas50 >= numComp) { notas.notas50 -= numComp;}
                 cout << "RS50 = " << numComp << endl;
+
                 calculaNotas(20,numComp,saqueVerAlt);
-                notas.notas20 -= numComp;
+                if (notas.notas20 > 0 && notas.notas20 >= numComp) { notas.notas20 -= numComp;}
                 cout << "RS20 = " << numComp << endl;
+
                 calculaNotas(10,numComp,saqueVerAlt);
-                notas.notas10 -= numComp;
+                if (notas.notas10 > 0 && notas.notas10 >= numComp) { notas.notas10 -= numComp;}
                 cout << "RS10 = " << numComp << endl;
+
                 calculaNotas(5,numComp,saqueVerAlt);
-                notas.notas5 -= numComp;
+                if (notas.notas5 > 0 && notas.notas5 >= numComp) { notas.notas5 -= numComp;}
                 cout << "RS5 = " << numComp << endl;
+
                 calculaNotas(2,numComp,saqueVerAlt);
-                notas.notas2 -= numComp;
+                if (notas.notas2 > 0 && notas.notas2 >= numComp) { notas.notas2 -= numComp;}
                 cout << "RS2 = " << numComp << endl;
 
                 saqueNotas.seekg(0);
@@ -291,13 +298,6 @@ void abasteceNotas()
     int temp10;
     int temp5;
     int temp2;
-    /*notas.notas100 = 0;
-    notas.notas50 = 0;
-    notas.notas20 = 0;
-    notas.notas10 = 0;
-    notas.notas5 = 0;
-    notas.notas2 = 0;
-    notas.valorTotal = 0;*/
 
     fflush(stdin);
     cout << "Informe quantas notas de R$100 foram colocadas: ";
@@ -345,5 +345,6 @@ void abasteceNotas()
 
         carga.read((char*) (&notas), sizeof(cedulas));
     }
+    carga.close();
 }
 #endif // FUNCOES_H_INCLUDED
