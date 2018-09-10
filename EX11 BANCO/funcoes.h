@@ -9,7 +9,7 @@
 //#include <sstream>
 #include <fstream>
 #include <conio2.h>
-//#include <time.h>
+#include <time.h>
 #include "structs.h"
 
 using namespace std;
@@ -136,8 +136,19 @@ void saque()
     if (localizar == 1)
     {
         int numComp;
+        time_t mytime;
+        mytime = time(NULL);
+        ctime(&mytime);
+
         cout << "Informe a quantia do saque: ";
-        cin >> saqueVer;
+
+        cout << mytime;
+
+            if(kbhit())
+            {
+            cin >> saqueVer;
+            }
+
 
         saqueVerAlt = saqueVer;
         saqueNotas.open("cedulas.txt", ios::in);
@@ -286,19 +297,19 @@ void abasteceNotas()
     cedulas notas;
     fstream carga;
 
-    int temp100 = 0;
+    int temp100;
     int temp50;
     int temp20;
     int temp10;
     int temp5;
     int temp2;
-    /*notas.notas100 = 0;
+    notas.notas100 = 0;
     notas.notas50 = 0;
     notas.notas20 = 0;
     notas.notas10 = 0;
     notas.notas5 = 0;
     notas.notas2 = 0;
-    notas.valorTotal = 0;*/
+    notas.valorTotal = 0;
 
     fflush(stdin);
     cout << "Informe quantas notas de R$100 foram colocadas: ";
