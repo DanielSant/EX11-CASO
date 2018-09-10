@@ -100,7 +100,7 @@ void saque()
     clrscr();
     char cpfVer[12], senhaVer[10];
     int localizar = 0, cont = 0;
-    int saqueVer, saqueVerAlt;
+    int saqueVer, saqueVerAlt, temp;
 
     fstream arqVer;
     fstream saqueNotas;
@@ -131,6 +131,7 @@ void saque()
         arqVer.read((char *) (&verificar), sizeof(stclient));
     }
 
+
     //arqVer.open("clientes.txt", ios::out);
     if (localizar == 1)
     {
@@ -138,7 +139,8 @@ void saque()
         cout << "Informe a quantia do saque: ";
         cin >> saqueVer;
 
-        saqueVerAlt = saqueVer;
+        //saqueVerAlt = saqueVer;
+
         saqueNotas.open("cedulas.txt", ios::in);
         saqueNotas.read((char*) (&notas), sizeof(cedulas));
 
@@ -146,51 +148,97 @@ void saque()
         {
             saqueNotas.close();
                 if (saqueVer <= verificar.saldo)
-            {
-                cout << "Quantia disponível! Aguarde o saque." << endl;
-                verificar.saldo = verificar.saldo - saqueVer;
-                arqVer.seekg((cont-1) * sizeof(stclient));
-                arqVer.write((const char*) (&verificar), sizeof(stclient));
+                {
+                    cout << "Quantia disponível! Aguarde o saque." << endl;
+                    verificar.saldo = verificar.saldo - saqueVer;
+                    arqVer.seekg((cont-1) * sizeof(stclient));
+                    arqVer.write((const char*) (&verificar), sizeof(stclient));
 
-                saqueNotas.open("cedulas.txt", ios::in | ios::out);
-                saqueNotas.read((char*) (&notas), sizeof(cedulas));
+                    saqueNotas.open("cedulas.txt", ios::in | ios::out);
+                    saqueNotas.read((char*) (&notas), sizeof(cedulas));
 
-                cout << endl;
+                    cout << endl;
 
-                calculaNotas(100,numComp,saqueVerAlt);
-                if (notas.notas100 > 0 && notas.notas100 >= numComp) { notas.notas100 -= numComp;}
-                cout << "RS100 = " << numComp << endl;
+                    temp = saqueVer/100;
+                    //calculaNotas(100,numComp,saqueVerAlt);
+                    if (notas.notas100 >= temp) {
+                        saqueVer = saqueVer%100;
+                        cout << "RS100 = " << temp << endl;
+                        notas.notas100 -= temp;
+                    }else{
+                        saqueVer = saqueVer - 100*notas.notas100;
+                        notas.notas100 = 0;
+                        cout << "RS100 = " << temp << endl;
+                    }
 
-                calculaNotas(50,numComp,saqueVerAlt);
-                if (notas.notas50 > 0 && notas.notas50 >= numComp) { notas.notas50 -= numComp;}
-                cout << "RS50 = " << numComp << endl;
+                    temp = saqueVer/50;
+                    //calculaNotas(50,numComp,saqueVerAlt);
+                    if (notas.notas50 >= temp) {
+                        saqueVer = saqueVer%50;
+                        cout << "RS50 = " << temp << endl;
+                        notas.notas50 -= temp;
+                    }else{
+                        saqueVer = saqueVer - 50*notas.notas50;
+                        notas.notas50 = 0;
+                        cout << "RS50 = " << temp << endl;
+                    }
 
-                calculaNotas(20,numComp,saqueVerAlt);
-                if (notas.notas20 > 0 && notas.notas20 >= numComp) { notas.notas20 -= numComp;}
-                cout << "RS20 = " << numComp << endl;
+                    temp = saqueVer/20;
+                    //calculaNotas(20,numComp,saqueVerAlt);
+                    if (notas.notas20 >= temp) {
+                        saqueVer = saqueVer%20;
+                        cout << "RS20 = " << temp << endl;
+                        notas.notas20 -= temp;
+                    }else{
+                        saqueVer = saqueVer - 20*notas.notas20;
+                        notas.notas20 = 0;
+                        cout << "RS20 = " << temp << endl;
+                    }
 
-                calculaNotas(10,numComp,saqueVerAlt);
-                if (notas.notas10 > 0 && notas.notas10 >= numComp) { notas.notas10 -= numComp;}
-                cout << "RS10 = " << numComp << endl;
+                    temp = saqueVer/10;
+                    //calculaNotas(10,numComp,saqueVerAlt);
+                    if (notas.notas10 >= temp) {
+                        saqueVer = saqueVer%10;
+                        cout << "RS10 = " << temp << endl;
+                        notas.notas10 -= temp;
+                    }else{
+                        saqueVer = saqueVer - 10*notas.notas10;
+                        notas.notas10 = 0;
+                        cout << "RS10 = " << temp << endl;
+                    }
 
-                calculaNotas(5,numComp,saqueVerAlt);
-                if (notas.notas5 > 0 && notas.notas5 >= numComp) { notas.notas5 -= numComp;}
-                cout << "RS5 = " << numComp << endl;
+                    temp = saqueVer/5;
+                    //calculaNotas(5,numComp,saqueVerAlt);
+                    if (notas.notas5 >= temp) {
+                        saqueVer = saqueVer%5;
+                        cout << "RS5 = " << temp << endl;
+                        notas.notas5 -= temp;
+                    }else{
+                        saqueVer = saqueVer - 5*notas.notas5;
+                        notas.notas5 = 0;
+                        cout << "RS5 = " << temp << endl;
+                    }
 
-                calculaNotas(2,numComp,saqueVerAlt);
-                if (notas.notas2 > 0 && notas.notas2 >= numComp) { notas.notas2 -= numComp;}
-                cout << "RS2 = " << numComp << endl;
+                    temp = saqueVer/2;
+                    //calculaNotas(2,numComp,saqueVerAlt);
+                    if (notas.notas2 >= temp) {
+                        saqueVer = saqueVer%2;
+                        cout << "RS2 = " << temp << endl;
+                        notas.notas2 -= temp;
+                    }else{
+                        cout << "Sem notas 2. Solicitar abastecimento.";
+                    }
 
-                saqueNotas.seekg(0);
-                saqueNotas.write((const char*) (&notas), sizeof(cedulas));
-                saqueNotas.close();
+                    saqueNotas.seekg(0);
+                    saqueNotas.write((const char*) (&notas), sizeof(cedulas));
+                    saqueNotas.close();
 
 
-                cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
+                    cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
 
-            }else{
-                cout << "Você não possui tal quantia disponível.";
-            }
+                }else{
+                    cout << "Você não possui tal quantia disponível.";
+                }
 
 
         }else{
@@ -226,11 +274,11 @@ void listaClientes()
     arq.close();
 }
 
-void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
+/*void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
 {
         numNotas = quantiaRestante/valorDaNota;
         quantiaRestante = quantiaRestante % valorDaNota;
-}
+*/
 
 void deposito()
 {
