@@ -3,7 +3,6 @@
 
 typedef struct
 {
-    int numberCont;//Número id da conta
     char nome[51];//Nome Completo
     char cpf[12]; // CPF do cliente
     double saldo;//Saldo bancário
@@ -21,5 +20,14 @@ typedef struct
     int notas2;
     int valorTotal;
 }cedulas;
+
+typedef struct
+{
+    char CPF[12];
+    char Data[11];
+    int retiradas;
+    double saldoAtual;
+    double depositos;
+}relatorio;
 
 #endif // STRUCTS_H_INCLUDED

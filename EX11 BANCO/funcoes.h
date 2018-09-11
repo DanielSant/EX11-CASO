@@ -4,9 +4,7 @@
 //Libraries and namespaces
 #include <iostream>
 #include <windows.h>
-//#include <stdlib.h>
 #include <string.h>
-//#include <sstream>
 #include <fstream>
 #include <conio2.h>
 #include <time.h>
@@ -16,34 +14,22 @@ using namespace std;
 //========================
 
 //Function prototypes--------------------
-bool login(char senha[], char *arquivo);
 char menu(void);
 void cadastro(void);
 void saque(void);
-void listaClientes(void);
+void listarClientes(void);
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
 void deposito(void);
 void abasteceNotas(void);
 void verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor);
 void mostrarNotasdisponiveis(void);
+void transacao(char cpfVer[], int saque, double saldo);
+void transacao(char cpfVer[], int dep);
+void transacao(char cpfCli[], double firstDep);
+void transacao(char CPF[], char key[]);
 //=======================================
 
 //Functions--------------------------------
-bool login(char senha[], char *arquivo)
-{
-    ifstream fin;
-    stclient client;
-    fin.open(arquivo, ios::in);
-        fin.read((char *)(&client), sizeof(stclient));
-            while(fin && !fin.eof())
-            {
-                if(strcmp(senha,client.senha)==0)
-                    return true;
-                fin.read((char *)(&client), sizeof(stclient));
-            }
-        fin.close();
-        return false;
-}
 
 char menu(void)
 {
@@ -51,11 +37,12 @@ char menu(void)
     cout<< "1 - Abrir conta\n"
         << "2 - Saque\n"
         << "3 - Depósito\n"
-        << "4 - Abastecer Notas TESTE\n"
-        << "5 - Lista Clientes\n"
-        << "6 - Encerrar\n"
+        << "4 - Extrato Conta\n"
+        << "5 - Abastecer Notas\n"
+        << "6 - Lista Clientes\n"
+        << "7 - Encerrar\n"
         << "  << Digite uma opção";
-    gotoxy(1,7);
+    gotoxy(1,8);
     fflush(stdin);
     cin >> choice;
     return choice;
@@ -77,8 +64,9 @@ void cadastro()
     cin.getline(cad.senha, 10);
     cout << "Informe Saldo a depositar: ";
     cin >> cad.saldo;
-
     cad.avail = 1; // 1 - Para conta ativa | 0 - Para conta apagada
+
+    transacao(cad.cpf,cad.saldo);
 
     arq.open("clientes.txt", ios::out | ios::app);
     arq.write((const char*) (&cad), sizeof(stclient));
@@ -280,6 +268,9 @@ void saque()
                             repetir = 0;
                             printf("\nSaque Realizado Com Sucesso!\n");
                             verificar.saldo = verificar.saldo - valorSaidoCaixa;
+
+                            transacao(cpfVer,valorSaidoCaixa,verificar.saldo);
+
                             cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
 
                             arqVer.seekg((cont-1) * sizeof(stclient));
@@ -317,7 +308,7 @@ void saque()
     }
 }
 
-void listaClientes()
+/*void listaClientes()
 {
     clrscr();
     stclient cad;
@@ -336,7 +327,7 @@ void listaClientes()
         arq.read((char *) (&cad), sizeof(stclient));
     }
     arq.close();
-}
+}*/
 
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
 {
@@ -385,11 +376,13 @@ void deposito()
 
             cout << "Depósito recebido! Saldo total cadastrado." << endl;
             verificar.saldo = verificar.saldo + depositar;
+
+            transacao(cpfVer,depositar);
+
             arqVer.seekg((cont-1) * sizeof(stclient));
             arqVer.write((const char*) (&verificar), sizeof(stclient));
 
             cout << "Seu saldo total é de: " << verificar.saldo << " R$";
-
     }
     else
     {
@@ -510,4 +503,131 @@ void mostrarNotasdisponiveis()
     carga.close();
 }
 
+void transacao(char cpfVer[], int saque, double saldo)
+{
+    fstream extrato;
+    relatorio expedir;
+
+    strcpy(expedir.CPF,cpfVer);
+    _strdate(expedir.Data);
+    expedir.retiradas=saque;
+    expedir.saldoAtual=saldo;
+    expedir.depositos=0;
+
+    extrato.open("transacoes.txt", ios::in|ios::out|ios::app);
+        extrato.write((const char*)&(expedir), sizeof(relatorio));
+    extrato.close();
+}
+
+void transacao(char cpfVer[], int dep)
+{
+    fstream extrato;
+    relatorio expedir;
+
+    expedir.depositos = dep;
+    expedir.saldoAtual += dep;
+
+    extrato.open("transacoes.txt", ios::in|ios::out|ios::app);
+        extrato.write((const char*)&(expedir), sizeof(relatorio));
+    extrato.close();
+}
+
+void transacao(char cpfCli[], double firstDep)
+{
+    fstream extrato;
+    relatorio expedir;
+
+    strcpy(expedir.CPF,cpfCli);
+    _strdate(expedir.Data);
+    expedir.depositos = firstDep;
+    expedir.retiradas = 0;
+    expedir.saldoAtual = firstDep;
+
+    extrato.open("transacoes.txt", ios::out|ios::app);
+        extrato.write((const char*)&(expedir), sizeof(relatorio));
+    extrato.close();
+}
+
+void transacao(char CPF[], char key[])
+{
+    clrscr();
+    fstream extrato;
+    fstream arqVer;
+    relatorio expedir;
+    stclient verificar;
+    bool confere = 0;
+    char data[9];
+
+    arqVer.open("clientes.txt", ios::in);
+    arqVer.read((char *) (&verificar), sizeof(stclient));
+
+    while(arqVer && !arqVer.eof())
+    {
+        if( (strcmp(CPF, verificar.cpf) == 0) && (strcmp(key, verificar.senha) == 0) )
+        {
+            confere = 1;
+            break;
+        }
+        arqVer.read((char *) (&verificar), sizeof(stclient));
+    }
+    arqVer.close();
+
+    cout << "\nRelatório de movimentações até hoje: " << _strdate(data) << " - Mês/Dia/Ano\n";
+    extrato.open("transacoes.txt", ios::in);
+    while(extrato.read((char*)(&expedir), sizeof(relatorio)))
+    {
+        if((strcmp(CPF,expedir.CPF) == 0) && (confere == 1))
+        {
+            cout << endl;
+            cout << "Nome: " <<verificar.nome << endl;
+            cout << "CPF: " <<expedir.CPF << endl;
+            cout << "Data: " <<expedir.Data << endl;
+            cout << "Saque: " <<expedir.retiradas << endl;
+            cout << "Saldo: " <<expedir.saldoAtual << endl;
+            cout << "Depositos: " <<expedir.depositos << endl;
+        }
+    }
+}
+
+void listarClientes()
+{
+    clrscr();
+    stclient cad;
+    stclient *trash;
+    int cont=0;
+
+    fstream arq;
+
+    arq.open("clientes.txt", ios::in);
+    arq.read((char* ) (&cad), sizeof(stclient));
+    while(!arq.eof())
+    {
+        cont++;
+    arq.read((char *) (&cad), sizeof(stclient));
+    }
+    arq.close();
+
+    trash = new stclient[cont];
+    arq.open("clientes.txt", ios::in);
+    for(int i=0; i<cont; i++)
+    {
+        arq.seekg((i) * sizeof(stclient));
+        arq.read((char* ) (&cad), sizeof(stclient));
+        trash[i]=cad;
+    }
+    arq.close();
+
+    for(int y=0; y<cont; y++)
+    {
+        if(trash[y].avail != 0)
+        {
+            cout << endl;
+            cout << "Nome: " << trash[y].nome << endl;
+            cout << "CPF: " << trash[y].cpf << endl;
+            cout << "Saldo: " << trash[y].saldo << endl;
+        }
+    }
+    delete [] trash;
+    trash = NULL;
+}
 #endif // FUNCOES_H_INCLUDED

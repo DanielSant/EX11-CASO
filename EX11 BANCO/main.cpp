@@ -11,6 +11,8 @@ int main()
 {setlocale(LC_ALL,"portuguese");
 
     char choice, ans;
+    char CPF[12];
+    char key[10];
 
     do
     {clrscr();
@@ -36,24 +38,35 @@ int main()
                 cin >> ans;
             break;
 
-            case '4'://Encerrar
+            case '4'://Extrato
+                clrscr();
+                cout << "Informe o CPF: ";
+                cin >> CPF;
+                cout << "Digite sua Senha: ";
+                cin >> key;
+                transacao(CPF,key);
+                cout << "\n\nOutra vez? (s/n)";
+                cin >> ans;
+            break;
+
+            case '5'://Encerrar
                 abasteceNotas();
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
             break;
 
-            case '5':
-                listaClientes();
+            case '6':
+                listarClientes();//Listar Clientes
                 cout << "\n\nOutra vez? (s/n)";
                 cin >> ans;
             break;
-            case '6':
+            case '7':
                 cout << "\nVlw :) :c :+\n";
             break;
 
             default:
                 cout << "Erro de escolha";
         }
-    }while(choice != '6' && toupper(ans) == 'S');
+    }while(choice != '7' && toupper(ans) == 'S');
     return 0;
 }
