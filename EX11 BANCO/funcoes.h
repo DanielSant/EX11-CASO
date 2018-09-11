@@ -24,6 +24,7 @@ void listaClientes(void);
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
 void deposito(void);
 void abasteceNotas(void);
+bool verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor);
 //=======================================
 
 //Functions--------------------------------
@@ -101,7 +102,10 @@ void saque()
     clrscr();
     char cpfVer[12], senhaVer[10];
     int localizar = 0, cont = 0;
-    int saqueVer, saqueVerAlt, temp;
+    int saque, temp;
+    int valorEntrada, valorSaidoCaixa;
+    int numComp;
+    string CedulasFaltam = " ";
 
     fstream arqVer;
     fstream saqueNotas;
@@ -115,7 +119,7 @@ void saque()
     cin.getline(senhaVer, 10);
 
     arqVer.open("clientes.txt", ios::in|ios::out);
-    arqVer.read((char *) (&verificar), sizeof(stclient));
+        arqVer.read((char *) (&verificar), sizeof(stclient));
 
     while(arqVer && !arqVer.eof())
     {
@@ -132,128 +136,129 @@ void saque()
         arqVer.read((char *) (&verificar), sizeof(stclient));
     }
 
-
     //arqVer.open("clientes.txt", ios::out);
     if (localizar == 1)
     {
-        int numComp;
-        time_t mytime;
-        mytime = time(NULL);
-        ctime(&mytime);
-
         cout << "Informe a quantia do saque: ";
-
-        cout << mytime;
-
-            if(kbhit())
-            {
-            cin >> saqueVer;
-            }
-
-
+        cin >> saque;
         //saqueVerAlt = saqueVer;
 
-        saqueNotas.open("cedulas.txt", ios::in);
+        saqueNotas.open("cedulas.txt", ios::in|ios::out);
         saqueNotas.read((char*) (&notas), sizeof(cedulas));
 
-        if (notas.valorTotal > saqueVer)
+        if (notas.valorTotal > saque)
         {
-            saqueNotas.close();
-                if (saqueVer <= verificar.saldo)
+            temp=saque;
+            valorEntrada=saque;
+                if (saque <= verificar.saldo)
                 {
-                    cout << "Quantia disponível! Aguarde o saque." << endl;
-                    verificar.saldo = verificar.saldo - saqueVer;
-                    arqVer.seekg((cont-1) * sizeof(stclient));
-                    arqVer.write((const char*) (&verificar), sizeof(stclient));
-
-                    saqueNotas.open("cedulas.txt", ios::in | ios::out);
-                    saqueNotas.read((char*) (&notas), sizeof(cedulas));
-
-                    cout << endl;
-
-                    temp = saqueVer/100;
-                    //calculaNotas(100,numComp,saqueVerAlt);
-                    if (notas.notas100 >= temp) {
-                        saqueVer = saqueVer%100;
-                        cout << "RS100 = " << temp << endl;
-                        notas.notas100 -= temp;
-                    }else{
-                        saqueVer = saqueVer - 100*notas.notas100;
-                        notas.notas100 = 0;
-                        cout << "RS100 = " << temp << endl;
+                    valorSaidoCaixa=0;
+                    calculaNotas(100,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas100,100)==true)
+                    {
+                        notas.notas100=notas.notas100-numComp;
+                        if(numComp!=0)
+                            printf("100: %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*100;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 100 ";
                     }
 
-                    temp = saqueVer/50;
-                    //calculaNotas(50,numComp,saqueVerAlt);
-                    if (notas.notas50 >= temp) {
-                        saqueVer = saqueVer%50;
-                        cout << "RS50 = " << temp << endl;
-                        notas.notas50 -= temp;
-                    }else{
-                        saqueVer = saqueVer - 50*notas.notas50;
-                        notas.notas50 = 0;
-                        cout << "RS50 = " << temp << endl;
+                    calculaNotas(50,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas50, 50)==true)
+                    {
+                        notas.notas50=notas.notas50-numComp;
+                        if(numComp!=0)
+                            printf("50:  %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*50;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 50 ";
                     }
 
-                    temp = saqueVer/20;
-                    //calculaNotas(20,numComp,saqueVerAlt);
-                    if (notas.notas20 >= temp) {
-                        saqueVer = saqueVer%20;
-                        cout << "RS20 = " << temp << endl;
-                        notas.notas20 -= temp;
-                    }else{
-                        saqueVer = saqueVer - 20*notas.notas20;
-                        notas.notas20 = 0;
-                        cout << "RS20 = " << temp << endl;
+                    calculaNotas(20,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas20, 20)==true)
+                    {
+                        notas.notas20=notas.notas20-numComp;
+                        if(numComp!=0)
+                            printf("20:  %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*20;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 20 ";
                     }
 
-                    temp = saqueVer/10;
-                    //calculaNotas(10,numComp,saqueVerAlt);
-                    if (notas.notas10 >= temp) {
-                        saqueVer = saqueVer%10;
-                        cout << "RS10 = " << temp << endl;
-                        notas.notas10 -= temp;
-                    }else{
-                        saqueVer = saqueVer - 10*notas.notas10;
-                        notas.notas10 = 0;
-                        cout << "RS10 = " << temp << endl;
+                    calculaNotas(10,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas10, 10)==true)
+                    {
+                        notas.notas10=notas.notas10-numComp;
+                        if(numComp!=0)
+                            printf("10:  %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*10;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 10 ";
                     }
 
-                    temp = saqueVer/5;
-                    //calculaNotas(5,numComp,saqueVerAlt);
-                    if (notas.notas5 >= temp) {
-                        saqueVer = saqueVer%5;
-                        cout << "RS5 = " << temp << endl;
-                        notas.notas5 -= temp;
-                    }else{
-                        saqueVer = saqueVer - 5*notas.notas5;
-                        notas.notas5 = 0;
-                        cout << "RS5 = " << temp << endl;
+                    calculaNotas(5,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas5, 5)==true)
+                    {
+                        notas.notas5=notas.notas5-numComp;
+                        if(numComp!=0)
+                            printf("5:   %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*5;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 5 ";
                     }
 
-                    temp = saqueVer/2;
-                    //calculaNotas(2,numComp,saqueVerAlt);
-                    if (notas.notas2 >= temp) {
-                        saqueVer = saqueVer%2;
-                        cout << "RS2 = " << temp << endl;
-                        notas.notas2 -= temp;
-                    }else{
-                        cout << "Sem notas 2. Solicitar abastecimento.";
+                    calculaNotas(2,numComp,saque);
+                    if(verificarNotas(numComp,temp,saque,notas.notas2, 2)==true)
+                    {
+                        notas.notas2=notas.notas2-numComp;
+                        if(numComp!=0)
+                            printf("2:   %d NOTAS\n",numComp);
+                        valorSaidoCaixa+=numComp*2;
+                    }
+                    else
+                    {
+                        CedulasFaltam += " R$ 2 ";
                     }
 
-                    saqueNotas.seekg(0);
-                    saqueNotas.write((const char*) (&notas), sizeof(cedulas));
-                    saqueNotas.close();
+                    if(valorEntrada==valorSaidoCaixa)
+                    {
+                        printf("\nSaque Realizado Com Sucesso!\n");
+                        verificar.saldo = verificar.saldo - valorSaidoCaixa;
+                        cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
 
+                        arqVer.seekg((cont-1) * sizeof(stclient));
+                            arqVer.write((const char*) (&verificar), sizeof(stclient));
+                        arqVer.close();
 
-                    cout << "Seu saldo restante é de: " << verificar.saldo << " R$";
+                        saqueNotas.seekg(0);
+                            saqueNotas.write((const char*) (&notas), sizeof(cedulas));
+                        saqueNotas.close();
+                    }
+                    else
+                    {
+                        cout << "Não foi possível compor o valor." << endl;
+                        cout << "Falta notas de: " << CedulasFaltam;
+                    }
 
-                }else{
+                }
+                else
+                {
                     cout << "Você não possui tal quantia disponível.";
                 }
-
-
-        }else{
+        }
+        else
+        {
             cout<< "Não há notas suficientes no caixa eletrônico. Solicitar reabastecimento." << endl;
         }
 
@@ -262,7 +267,6 @@ void saque()
     {
         cout << "Conta inválida/Não registrada!";
     }
-    arqVer.close();
 }
 
 void listaClientes()
@@ -286,11 +290,11 @@ void listaClientes()
     arq.close();
 }
 
-/*void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
+void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante)
 {
         numNotas = quantiaRestante/valorDaNota;
         quantiaRestante = quantiaRestante % valorDaNota;
-*/
+}
 
 void deposito()
 {
@@ -414,5 +418,18 @@ void abasteceNotas()
         carga.read((char*) (&notas), sizeof(cedulas));
     }
     carga.close();
+}
+
+bool verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor)
+{
+    bool result = true;
+    if(numComp>quantianota)
+    {
+        numComp=quantianota;
+        saque=temp-(quantianota*valor);
+        temp=saque;
+        result = false;
+    }
+    return result;
 }
 #endif // FUNCOES_H_INCLUDED
