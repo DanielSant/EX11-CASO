@@ -24,7 +24,7 @@ void listaClientes(void);
 void calculaNotas(int valorDaNota, int& numNotas, int& quantiaRestante);
 void deposito(void);
 void abasteceNotas(void);
-bool verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor);
+void verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor);
 //=======================================
 
 //Functions--------------------------------
@@ -153,83 +153,64 @@ void saque()
                 if (saque <= verificar.saldo)
                 {
                     valorSaidoCaixa=0;
+
                     calculaNotas(100,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas100,100)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas100,100);
+                        if(notas.notas100 == 0)
+                            CedulasFaltam += " R$ 100 ";
+
                         notas.notas100=notas.notas100-numComp;
                         if(numComp!=0)
                             printf("100: %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*100;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 100 ";
-                    }
 
                     calculaNotas(50,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas50, 50)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas50, 50);
+                        if(notas.notas50 == 0)
+                            CedulasFaltam += " R$ 50 ";
+
                         notas.notas50=notas.notas50-numComp;
                         if(numComp!=0)
                             printf("50:  %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*50;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 50 ";
-                    }
 
                     calculaNotas(20,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas20, 20)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas20, 20);
+                        if(notas.notas20 == 0)
+                            CedulasFaltam += " R$ 20 ";
+
                         notas.notas20=notas.notas20-numComp;
                         if(numComp!=0)
                             printf("20:  %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*20;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 20 ";
-                    }
 
                     calculaNotas(10,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas10, 10)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas10, 10);
+                        if(notas.notas10 == 0)
+                            CedulasFaltam += " R$ 10 ";
+
                         notas.notas10=notas.notas10-numComp;
                         if(numComp!=0)
                             printf("10:  %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*10;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 10 ";
-                    }
 
                     calculaNotas(5,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas5, 5)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas5, 5);
                         notas.notas5=notas.notas5-numComp;
                         if(numComp!=0)
                             printf("5:   %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*5;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 5 ";
-                    }
+                        if(notas.notas5 == 0)
+                            CedulasFaltam += " R$ 5 ";
 
                     calculaNotas(2,numComp,saque);
-                    if(verificarNotas(numComp,temp,saque,notas.notas2, 2)==true)
-                    {
+                    verificarNotas(numComp,temp,saque,notas.notas2, 2);
                         notas.notas2=notas.notas2-numComp;
                         if(numComp!=0)
                             printf("2:   %d NOTAS\n",numComp);
                         valorSaidoCaixa+=numComp*2;
-                    }
-                    else
-                    {
-                        CedulasFaltam += " R$ 2 ";
-                    }
+                        if(notas.notas2 == 0)
+                            CedulasFaltam += " R$ 2 ";
 
                     if(valorEntrada==valorSaidoCaixa)
                     {
@@ -420,16 +401,14 @@ void abasteceNotas()
     carga.close();
 }
 
-bool verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor)
+void verificarNotas(int& numComp,int& temp, int& saque, int& quantianota, int valor)
 {
-    bool result = true;
     if(numComp>quantianota)
     {
         numComp=quantianota;
         saque=temp-(quantianota*valor);
         temp=saque;
-        result = false;
     }
-    return result;
 }
+
 #endif // FUNCOES_H_INCLUDED
